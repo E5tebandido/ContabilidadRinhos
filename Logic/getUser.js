@@ -1,6 +1,6 @@
 var udata = async () => {
     const response = await fetch (
-        "https://e5tebandido.github.io/Data/Users.json"
+        "./Data/User.json"
     );
     var data = await response.json();
     addUTable(
