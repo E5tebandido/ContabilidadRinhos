@@ -1,11 +1,28 @@
+//Revisar el ciclo de cargue de la tabla
+
 var udata = async () => {
-    const response = await fetch (
+    runFire();
+    firebase.database().ref('athletes').on('value', response => {
+        console.log(response.val());
+        addUTable(
+            response.val()
+        );
+        /*response.forEach ( 
+            user => {
+                console.log(user.val());
+                /*addUTable(
+                    user.val()
+                );
+            }
+        )*/
+    })
+    /*const response = await fetch (
         "./Data/User.json"
     );
     var data = await response.json();
     addUTable(
         data
-    );
+    );*/
 }
 
 var createTable = () => {
@@ -191,35 +208,19 @@ var addNewU = () => {
     }
 }
 
-var stringfyData = () => {
-    return JSON.stringify (
-        {
-            "Documento" : document.getElementById("val0").value,
-            "Nombre" : document.getElementById("val1").value,
-            "Categoria" : document.getElementById("val2").value,
-            "Numero" : document.getElementById("val3").value,
-            "Epago" : document.getElementById("val4").value,
-        }
-    )
-}
-
 var sendData = () => {
-    fetch (
-        "https://e5tebandido.github.io/Data/Users.json", {
-            credentials: 'same-origin',
-            method: "POST",
-            body: stringfyData(),
-            headers: {
-                "Content-type": "application/json"
-            }
-        }
-    ).then (
-        (response) => response.json()
-    )
-    .then(
-        (json) => console.log (
-            json
-        )
-    );
-    udata();
+        runFire();
+        firebase.database().ref("athletes"+"/").child(document.getElementById("val0").value).set({
+            "Doc":document.getElementById("val0").value,
+            "Name":document.getElementById("val1").value,
+            "Cat":document.getElementById("val2").value,
+            "Num":document.getElementById("val3").value,
+            "Stp":document.getElementById("val4").value,
+        })
+        .then(function(){
+            udata();
+        })
+        .catch(function(){
+            console.log("Error insertando jugadores");
+        });
 }
