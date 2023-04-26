@@ -1,226 +1,205 @@
-//Revisar el ciclo de cargue de la tabla
-
-var udata = async () => {
+var udata = () => {
     runFire();
-    firebase.database().ref('athletes').on('value', response => {
-        console.log(response.val());
-        addUTable(
-            response.val()
-        );
-        /*response.forEach ( 
-            user => {
-                console.log(user.val());
-                /*addUTable(
-                    user.val()
-                );
-            }
-        )*/
-    })
-    /*const response = await fetch (
-        "./Data/User.json"
-    );
-    var data = await response.json();
-    addUTable(
-        data
-    );*/
+    firebase.database().ref (
+        "Rinhosdata"
+    ).child (
+        "Athletes"
+    ).once (
+        'value', 
+        response => {
+            createTable();
+            addUHead (
+                response.val()
+            );
+            addUBody(
+                response.val()
+            );
+        }
+    )
 }
 
 var createTable = () => {
-    if (document.getElementById("utable") == null) {
-        let table = document.createElement (
-            "table"
-        );
-        let thead = document.createElement (
-            "thead"
-        );
-        let tbody = document.createElement (
-            "tbody"
-        );
-        let tfood = document.createElement (
-            "tfooter"
-        ); 
-        let trow = document.createElement (
-            "tr"
-        );  
-        let tnew = document.createElement (
-            "a"
-        );  
-        let snew = document.createElement (
-            "a"
-        ); 
-        table.appendChild (
-            thead
-        );
-        thead.appendChild (
-            trow
-        );
-        trow.appendChild (
-            document.createElement (
-                "th"
-            )
-        ).textContent = "Documento";
-        trow.appendChild (
-            document.createElement (
-                "th"
-            )
-        ).textContent = "Nombre";
-        trow.appendChild (
-            document.createElement (
-                "th"
-            )
-        ).textContent = "Categoria";
-        trow.appendChild (
-            document.createElement (
-                "th"
-            )
-        ).textContent = "Numero";
-        trow.appendChild (
-            document.createElement (
-                "th"
-            )
-        ).textContent = "Estado de pago";
-        table.appendChild (
-            tbody
-        );
-        table.appendChild (
-            tfood
-        );
-        document.getElementById("panel").appendChild (
-            tnew
-        );
-        snew.className = "invisible";
-        snew.id = "savedata";
-        snew.href = "javascript:void(0)";
-        snew.textContent = "Guardar";
-        snew.setAttribute("onClick","sendData()");
-        table.id = "utable"; 
-        tbody.id = "ubody";
-        table.className = "table table-bordered";
-        tnew.className = "btn rounded-0 btn-block";
-        tnew.id = "insertnewr";
-        tnew.href = "javascript:void(0)";
-        tnew.textContent = "Agregar nuevo";
-        tnew.setAttribute("onClick","addNewU()");
-        document.getElementById (
-            "panel"
-        ).appendChild (
-            table
-        ); 
-        document.getElementById("panel").appendChild (
-            snew
-        );
-    } else {
-        console.log(
-            "ya existe la tabla" + document.getElementById (
-                "utable"
-            )
-        );
-    }
-    return document.getElementById("ubody");
-}
-
-var addUTable = (data) => {
-    let tbody = createTable();
-    if ( 
-        tbody.hasChildNodes() && 
-        tbody.childNodes.length == data.length
+    if (document.getElementById (
+        "utable"
+        ) && document.getElementById (
+            "insertnewr"
+        )
     ) {
-        console.log ( 
-            "No se detectan cambios"
-        )
-    } else {
-        console.log ( 
-            "Se detectan cambios"
-        )
-        while ( 
-            tbody.firstChild
-        ) {
-            tbody.removeChild (
-                tbody.firstChild
-            );
-        }
         document.getElementById (
-            "savedata"
-        ).className = "invisible";
-        for (var i = 0; i < data.length; i++) {
-            let tr = document.createElement (
-                'tr'
-            );
-            tbody.appendChild (
-                tr
-            );
-            console.log(Object.keys(data[i]).length);
-            for (var j = 0; j < Object.keys(data[i]).length; j++) {
-                let td = document.createElement (
-                    'td'
-                );
-                td.appendChild (
-                    document.createTextNode (
-                        Object.values(data[i])[j]
-                    )
-                );
-                tr.appendChild (
-                    td
-                );
-            }
-        }
+            "utable"
+        ).remove();
+        document.getElementById (
+            "insertnewr"
+        ).remove();
     }
-}
-
-var addNewU = () => {
-    let tbody = createTable();
     if (
         document.getElementById (
-            "val0"
+            "savedata"
         )
     ) {
-        console.log (
-            "Ya existe"
-        );
-    } else {
-        for (var i = 0; i < 1; i++) {
-            let tr = document.createElement (
-                'tr'
-            );
-            tbody.appendChild (
-                tr
-            );
-            for (var j = 0; j < 5; j++) {
-                let td = document.createElement (
-                    'td'
-                );
-                let newval = document.createElement (
-                    'input'
-                );
-                newval.id = "val"+j;
-                newval.className="form-control rounded-0";
-                td.appendChild (
-                    newval
-                );
-                tr.appendChild (
-                    td
-                );
-            }
-        }
         document.getElementById (
             "savedata"
-        ).className = "btn rounded-0 bg-success text-white visible";
+        ).remove();
     }
+    let table = document.createElement (
+        "table"
+    );
+    let thead = document.createElement (
+        "thead"
+    );
+    let tbody = document.createElement (
+        "tbody"
+    );
+    let tfood = document.createElement (
+        "tfooter"
+    );  
+    let tnew = document.createElement (
+        "a"
+    );  
+    table.appendChild (
+        thead
+    );
+    table.appendChild (
+        tbody
+    );
+    table.appendChild (
+        tfood
+    );
+    document.getElementById (
+        "panel"
+    ).appendChild (
+        tnew
+    );
+    table.id = "utable"; 
+    tbody.id = "ubody";
+    thead.id = "uhead";
+    table.className = "table table-bordered";
+    tnew.className = "btn rounded-0 btn-block";
+    tnew.id = "insertnewr";
+    tnew.href = "javascript:void(0)";
+    tnew.textContent = "Agregar nuevo";
+    tnew.setAttribute("onClick","addNewU(9)");
+    document.getElementById (
+        "panel"
+    ).appendChild (
+        table
+    );
+}
+
+var addUHead = (data) => {
+    let thead = document.getElementById("uhead");
+    for (var i = 0; i < 1; i++) {
+        let tr = document.createElement (
+            'tr'
+        );
+        thead.appendChild (
+            tr
+        );
+        console.log(thead.childNodes);
+        for (var j = 0; j < Object.keys(data[Object.keys(data)[i]]).length; j++) {
+            
+            let td = document.createElement (
+                'th'
+            );
+            td.appendChild (
+                document.createTextNode (
+                    Object.keys(data[Object.keys(data)[i]])[j]
+                )
+            );
+            tr.appendChild (
+                td
+            );
+        }
+    }
+    console.log(thead);
+}
+
+var addUBody = (data) => {
+    let tbody = document.getElementById("ubody");
+    for (var i = 0; i < Object.keys(data).length; i++) {
+        let tr = document.createElement (
+            'tr'
+        );
+        tbody.appendChild (
+            tr
+        );
+        for (var j = 0; j < Object.keys(data[Object.keys(data)[i]]).length; j++) {
+            let td = document.createElement (
+                'td'
+            );
+            td.appendChild (
+                document.createTextNode (
+                    Object.values(data[Object.keys(data)[i]])[j]
+                )
+            );
+            tr.appendChild (
+                td
+            );
+        }
+        
+    }
+}
+
+var addNewU = (numcol) => {
+    for (var i = 0; i < 1; i++) {
+        let tr = document.createElement (
+            'tr'
+        );
+        document.getElementById("ubody").appendChild (
+            tr
+        );
+        for (var j = 0; j < numcol; j++) {
+            let td = document.createElement (
+                'td'
+            );
+            let newval = document.createElement (
+                'input'
+            );
+            newval.id = "val"+j;
+            newval.className="form-control rounded-0";
+            td.appendChild (
+                newval
+            );
+            tr.appendChild (
+                td
+            );
+        }
+    }
+    let snew = document.createElement (
+        "a"
+    ); 
+    snew.className = "btn rounded-0 btn-block";
+    snew.id = "savedata";
+    snew.href = "javascript:void(0)";
+    snew.textContent = "Guardar";
+    snew.setAttribute("onClick","sendData()");
+    document.getElementById("panel").appendChild (
+        snew
+    );
 }
 
 var sendData = () => {
         runFire();
-        firebase.database().ref("athletes"+"/").child(document.getElementById("val0").value).set({
+        firebase.database().ref("Rinhosdata").child("Athletes").child(document.getElementById("val0").value).set({
             "Doc":document.getElementById("val0").value,
             "Name":document.getElementById("val1").value,
             "Cat":document.getElementById("val2").value,
             "Num":document.getElementById("val3").value,
             "Stp":document.getElementById("val4").value,
         })
-        .then(function(){
+        .then( () => {
             udata();
+            if (
+                document.getElementById (
+                    "savedata"
+                )
+            ) {
+                document.getElementById (
+                    "savedata"
+                ).remove();
+            }
         })
-        .catch(function(){
-            console.log("Error insertando jugadores");
+        .catch( () =>{
+            console.log("Error cargando en firebase");
         });
 }

@@ -56,12 +56,8 @@ var createNav = () => {
         logo.textContent = "Rinhos contabilidad";
         user.className = "nav-item nav-link";
         user.href = "javascript:void(0)";
-        user.textContent = "Deportistas";
+        user.textContent = "Datos";
         user.setAttribute("onClick","userPanel()");
-        mont.className = "nav-item nav-link";
-        mont.href = "javascript:void(0)";
-        mont.textContent = "Mensualidad";
-        mont.setAttribute("onClick","monthlyPanel()");
         navigation.className = "navbar-nav";
         menu.className = "navbar-collapse";
         menu.id = "gmenu";
