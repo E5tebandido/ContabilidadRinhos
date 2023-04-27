@@ -253,7 +253,7 @@ var sendData = (db,tb,columns) => {
 
 var getTableParam = () => {
     return fetch (
-        "../Data/Param.json"
+        "https://e5tebandido.github.io/Data/Users.json"
     ).then (
         res => res.json()
     ).then (
