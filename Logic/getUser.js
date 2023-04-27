@@ -1,13 +1,13 @@
-var udata = () => {
+var udata = (db,tb) => {
     runFire();
     firebase.database().ref (
-        "Rinhosdata"
+        db
     ).child (
-        "Athletes"
+        tb
     ).once (
         'value', 
         response => {
-            createTable();
+            createTable(db,tb);
             addUHead (
                 response.val()
             );
@@ -18,7 +18,7 @@ var udata = () => {
     )
 }
 
-var createTable = () => {
+var createTable = (db,tb) => {
     if (document.getElementById (
         "utable"
         ) && document.getElementById (
@@ -78,7 +78,19 @@ var createTable = () => {
     tnew.id = "insertnewr";
     tnew.href = "javascript:void(0)";
     tnew.textContent = "Agregar nuevo";
-    tnew.setAttribute("onClick","addNewU(9)");
+    tnew.addEventListener (
+        "click",
+        () => {
+            getTableParam().then (
+                users => {
+                    addNewU(db,tb,users[tb].columns);
+                }
+            ) 
+            .catch (
+                err => console.log (err)
+            )
+        }
+    );
     document.getElementById (
         "panel"
     ).appendChild (
@@ -95,7 +107,6 @@ var addUHead = (data) => {
         thead.appendChild (
             tr
         );
-        console.log(thead.childNodes);
         for (var j = 0; j < Object.keys(data[Object.keys(data)[i]]).length; j++) {
             
             let td = document.createElement (
@@ -111,7 +122,6 @@ var addUHead = (data) => {
             );
         }
     }
-    console.log(thead);
 }
 
 var addUBody = (data) => {
@@ -129,7 +139,7 @@ var addUBody = (data) => {
             );
             td.appendChild (
                 document.createTextNode (
-                    Object.values(data[Object.keys(data)[i]])[j]
+                    Object.values (data[Object.keys(data)[i]])[j]
                 )
             );
             tr.appendChild (
@@ -140,7 +150,25 @@ var addUBody = (data) => {
     }
 }
 
-var addNewU = (numcol) => {
+var addNewU = (db,tb,columns) => {
+    if (
+        document.getElementById (
+            "addline"
+        )
+    ) {
+        document.getElementById (
+            "addline"
+        ).remove();
+    }
+    if (
+        document.getElementById (
+            "savedata"
+        )
+    ) {
+        document.getElementById (
+            "savedata"
+        ).remove();
+    }
     for (var i = 0; i < 1; i++) {
         let tr = document.createElement (
             'tr'
@@ -148,14 +176,16 @@ var addNewU = (numcol) => {
         document.getElementById("ubody").appendChild (
             tr
         );
-        for (var j = 0; j < numcol; j++) {
+        tr.id = "addline";
+        for (var j = 0; j < Object.keys(columns).length; j++) {
             let td = document.createElement (
                 'td'
             );
             let newval = document.createElement (
                 'input'
             );
-            newval.id = "val"+j;
+            newval.id = Object.keys(columns)[j];
+            newval.placeholder = Object.values(columns)[j];
             newval.className="form-control rounded-0";
             td.appendChild (
                 newval
@@ -172,34 +202,61 @@ var addNewU = (numcol) => {
     snew.id = "savedata";
     snew.href = "javascript:void(0)";
     snew.textContent = "Guardar";
-    snew.setAttribute("onClick","sendData()");
+    snew.addEventListener (
+        "click",
+        () => {
+            sendData(db,tb,columns);
+        }
+    );
     document.getElementById("panel").appendChild (
         snew
     );
 }
 
-var sendData = () => {
-        runFire();
-        firebase.database().ref("Rinhosdata").child("Athletes").child(document.getElementById("val0").value).set({
-            "Doc":document.getElementById("val0").value,
-            "Name":document.getElementById("val1").value,
-            "Cat":document.getElementById("val2").value,
-            "Num":document.getElementById("val3").value,
-            "Stp":document.getElementById("val4").value,
-        })
-        .then( () => {
-            udata();
-            if (
-                document.getElementById (
-                    "savedata"
-                )
-            ) {
-                document.getElementById (
-                    "savedata"
-                ).remove();
-            }
-        })
-        .catch( () =>{
-            console.log("Error cargando en firebase");
-        });
+var sendData = (db,tb,columns) => {
+    let data4send = {};
+    for (var j = 0; j < Object.keys(columns).length; j++) {
+        data4send[Object.keys(columns)[j]] = document.getElementById(Object.keys(columns)[j]).value;
+    }
+    runFire();
+    firebase.database().ref (
+        db
+    ).child (
+        tb
+    ).push (
+        data4send
+    )
+    .then( () => {
+        if (
+            document.getElementById (
+                "savedata"
+            )
+        ) {
+            document.getElementById (
+                "savedata"
+            ).remove();
+        }
+        if (
+            document.getElementById (
+                "addline"
+            )
+        ) {
+            document.getElementById (
+                "addline"
+            ).remove();
+        }
+    })
+    .catch( (Error) =>{
+        console.log(Error);
+    });
+}
+
+var getTableParam = () => {
+    return fetch (
+        "../Data/Param.json"
+    ).then (
+        res => res.json()
+    ).then (
+        data => (data) 
+    ) 
 }

@@ -6,5 +6,9 @@ document.addEventListener (
 );
 
 var userPanel = () => {
-    udata();
+    udata("rdata","athletes");
+}
+
+var paymentPanel = () => {
+    udata("rdata","payment");
 }

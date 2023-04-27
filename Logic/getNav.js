@@ -18,13 +18,7 @@ var createNav = () => {
         let user = document.createElement (
             "a"
         );
-        let mont = document.createElement (
-            "a"
-        );
-        let tax = document.createElement (
-            "a"
-        );
-        let tour = document.createElement (
+        let pay = document.createElement (
             "a"
         );
         nav.appendChild ( 
@@ -37,13 +31,7 @@ var createNav = () => {
             user
         );
         navigation.appendChild ( 
-            mont
-        );
-        navigation.appendChild ( 
-            tax
-        );        
-        navigation.appendChild ( 
-            tour
+            pay
         );
         menu.appendChild ( 
             navigation
@@ -56,8 +44,12 @@ var createNav = () => {
         logo.textContent = "Rinhos contabilidad";
         user.className = "nav-item nav-link";
         user.href = "javascript:void(0)";
-        user.textContent = "Datos";
+        user.textContent = "Deportistas";
         user.setAttribute("onClick","userPanel()");
+        pay.className = "nav-item nav-link";
+        pay.href = "javascript:void(0)";
+        pay.textContent = "Pagos";
+        pay.setAttribute("onClick","paymentPanel()");
         navigation.className = "navbar-nav";
         menu.className = "navbar-collapse";
         menu.id = "gmenu";
