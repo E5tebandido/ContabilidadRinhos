@@ -14,6 +14,9 @@ var udata = (db,tb) => {
             addUBody(
                 response.val()
             );
+            $(
+                '#utable'
+            ).DataTable();
         }
     )
 }
@@ -23,6 +26,8 @@ var createTable = (db,tb) => {
         "utable"
         ) && document.getElementById (
             "insertnewr"
+        ) && document.getElementById (
+            "respcon"
         )
     ) {
         document.getElementById (
@@ -30,6 +35,9 @@ var createTable = (db,tb) => {
         ).remove();
         document.getElementById (
             "insertnewr"
+        ).remove();
+        document.getElementById (
+            "respcon"
         ).remove();
     }
     if (
@@ -41,6 +49,9 @@ var createTable = (db,tb) => {
             "savedata"
         ).remove();
     }
+    let responsivecon = document.createElement (
+        "div"
+    );
     let table = document.createElement (
         "table"
     );
@@ -73,8 +84,10 @@ var createTable = (db,tb) => {
     table.id = "utable"; 
     tbody.id = "ubody";
     thead.id = "uhead";
+    responsivecon.id = "respcon";
+    responsivecon.className = "table-responsive p-3";
     table.className = "table table-bordered";
-    tnew.className = "btn rounded-0 btn-block";
+    tnew.className = "btn float-right btn-primary m-3";
     tnew.id = "insertnewr";
     tnew.href = "javascript:void(0)";
     tnew.textContent = "Agregar nuevo";
@@ -93,6 +106,11 @@ var createTable = (db,tb) => {
     );
     document.getElementById (
         "panel"
+    ).appendChild (
+        responsivecon
+    );
+    document.getElementById (
+        "respcon"
     ).appendChild (
         table
     );
@@ -151,6 +169,8 @@ var addUBody = (data) => {
 }
 
 var addNewU = (db,tb,columns) => {
+    let sortedkeys = Object.keys(columns);
+    sortedkeys.sort();
     if (
         document.getElementById (
             "addline"
@@ -173,19 +193,21 @@ var addNewU = (db,tb,columns) => {
         let tr = document.createElement (
             'tr'
         );
-        document.getElementById("ubody").appendChild (
+        document.getElementById(
+            "ubody"
+        ).appendChild (
             tr
         );
         tr.id = "addline";
-        for (var j = 0; j < Object.keys(columns).length; j++) {
+        for (var j = 0; j < sortedkeys.length; j++) {
             let td = document.createElement (
                 'td'
             );
             let newval = document.createElement (
                 'input'
             );
-            newval.id = Object.keys(columns)[j];
-            newval.placeholder = Object.values(columns)[j];
+            newval.id = sortedkeys[j];
+            newval.placeholder = columns[sortedkeys[j]];
             newval.className="form-control rounded-0";
             td.appendChild (
                 newval
@@ -198,7 +220,7 @@ var addNewU = (db,tb,columns) => {
     let snew = document.createElement (
         "a"
     ); 
-    snew.className = "btn rounded-0 btn-block";
+    snew.className = "btn float-right btn-success m-3";
     snew.id = "savedata";
     snew.href = "javascript:void(0)";
     snew.textContent = "Guardar";

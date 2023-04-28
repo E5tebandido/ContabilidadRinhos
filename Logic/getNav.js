@@ -39,7 +39,7 @@ var createNav = () => {
         nav.appendChild ( 
             menu
         );
-        nav.className = "navbar navbar-light bg-light";
+        nav.className = "navbar navbar-expand-lg navbar-light bg-light";
         logo.className = "navbar-brand mb-0 h1";
         logo.textContent = "Rinhos contabilidad";
         user.className = "nav-item nav-link";
@@ -51,7 +51,7 @@ var createNav = () => {
         pay.textContent = "Pagos";
         pay.setAttribute("onClick","paymentPanel()");
         navigation.className = "navbar-nav";
-        menu.className = "navbar-collapse";
+        menu.className = "collapse navbar-collapse";
         menu.id = "gmenu";
         butt.className = "navbar-toggler";
         butt.type = "button";
