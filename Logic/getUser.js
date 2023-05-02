@@ -7,12 +7,17 @@ var udata = (db,tb) => {
     ).once (
         'value', 
         response => {
-            createTable(db,tb);
+            createTable (
+                db,
+                tb
+            );
             addUHead (
                 response.val()
             );
             addUBody(
-                response.val()
+                response.val(),
+                db,
+                tb
             );
             $(
                 '#utable'
@@ -96,7 +101,7 @@ var createTable = (db,tb) => {
         () => {
             getTableParam().then (
                 users => {
-                    addNewU(db,tb,users[tb].columns);
+                    addNew(null,db,tb,users[tb].columns);
                 }
             ) 
             .catch (
@@ -126,7 +131,6 @@ var addUHead = (data) => {
             tr
         );
         for (var j = 0; j < Object.keys(data[Object.keys(data)[i]]).length; j++) {
-            
             let td = document.createElement (
                 'th'
             );
@@ -142,11 +146,24 @@ var addUHead = (data) => {
     }
 }
 
-var addUBody = (data) => {
+var addUBody = (data,db,tb) => {
     let tbody = document.getElementById("ubody");
     for (var i = 0; i < Object.keys(data).length; i++) {
         let tr = document.createElement (
             'tr'
+        );
+        tr.addEventListener (
+            "click",
+            () => {
+                getTableParam().then (
+                    users => {
+                        addNew(tr.childNodes,db,tb,users[tb].columns);
+                    }
+                ) 
+                .catch (
+                    err => console.log (err)
+                )
+            }
         );
         tbody.appendChild (
             tr
@@ -164,13 +181,22 @@ var addUBody = (data) => {
                 td
             );
         }
-        
     }
 }
 
-var addNewU = (db,tb,columns) => {
+var addNew = (tr,db,tb,columns) => {
+    let val = tr;
     let sortedkeys = Object.keys(columns);
     sortedkeys.sort();
+    if (
+        document.getElementById (
+            "deldata"
+        )
+    ) {
+        document.getElementById (
+            "deldata"
+        ).remove();
+    }
     if (
         document.getElementById (
             "addline"
@@ -207,8 +233,13 @@ var addNewU = (db,tb,columns) => {
                 'input'
             );
             newval.id = sortedkeys[j];
+            if ( 
+                val
+            ){
+                newval.value = val[j].textContent;
+            }
             newval.placeholder = columns[sortedkeys[j]];
-            newval.className="form-control rounded-0";
+            newval.className = "form-control rounded-0";
             td.appendChild (
                 newval
             );
@@ -233,6 +264,26 @@ var addNewU = (db,tb,columns) => {
     document.getElementById("panel").appendChild (
         snew
     );
+    if (
+        val
+    ) {
+        let sedit = document.createElement (
+            "a"
+        ); 
+        sedit.className = "btn float-right btn-danger m-3";
+        sedit.id = "deldata";
+        sedit.href = "javascript:void(0)";
+        sedit.textContent = "Eliminar";
+        sedit.addEventListener (
+            "click",
+            () => {
+                delData(db,tb);
+            }
+        );
+        document.getElementById("panel").appendChild (
+            sedit
+        );
+    }
 }
 
 var sendData = (db,tb,columns) => {
@@ -245,32 +296,96 @@ var sendData = (db,tb,columns) => {
         db
     ).child (
         tb
-    ).push (
+    ).child (
+        document.getElementById("Doc").value
+    ).set (
         data4send
+    ).then ( 
+        () => {
+            alert (
+                "Agregado"
+            );
+            if (
+                document.getElementById (
+                    "savedata"
+                )
+            ) {
+                document.getElementById (
+                    "savedata"
+                ).remove();
+            }
+            if (
+                document.getElementById (
+                    "deldata"
+                )
+            ) {
+                document.getElementById (
+                    "deldata"
+                ).remove();
+            }
+            if (
+                document.getElementById (
+                    "addline"
+                )
+            ) {
+                document.getElementById (
+                    "addline"
+                ).remove();
+            }
+        }
+    ).catch ( 
+        (Error) => {
+            alert (
+                Error
+            );
+        }
+    );
+}
+
+var delData = (db,tb) => {
+    runFire();
+    firebase.database().ref (
+        db
+    ).child (
+        tb
+    ).child (
+        document.getElementById("Doc").value
+    ).set (
+        null
+    ).then( 
+        () => {
+            alert (
+                "Borrado"
+            );
+            if (
+                document.getElementById (
+                    "savedata"
+                )
+            ) {
+                document.getElementById (
+                    "savedata"
+                ).remove();
+            }
+            if (
+                document.getElementById (
+                    "deldata"
+                )
+            ) {
+                document.getElementById (
+                    "deldata"
+                ).remove();
+            }
+            if (
+                document.getElementById (
+                    "addline"
+                )
+            ) {
+                document.getElementById (
+                    "addline"
+                ).remove();
+            }
+        }
     )
-    .then( () => {
-        if (
-            document.getElementById (
-                "savedata"
-            )
-        ) {
-            document.getElementById (
-                "savedata"
-            ).remove();
-        }
-        if (
-            document.getElementById (
-                "addline"
-            )
-        ) {
-            document.getElementById (
-                "addline"
-            ).remove();
-        }
-    })
-    .catch( (Error) =>{
-        console.log(Error);
-    });
 }
 
 var getTableParam = () => {
