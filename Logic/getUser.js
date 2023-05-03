@@ -47,6 +47,15 @@ var createTable = (db,tb) => {
     }
     if (
         document.getElementById (
+            "deldata"
+        )
+    ) {
+        document.getElementById (
+            "deldata"
+        ).remove();
+    }
+    if (
+        document.getElementById (
             "savedata"
         )
     ) {
