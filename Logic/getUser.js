@@ -7,21 +7,29 @@ var udata = (db,tb) => {
     ).once (
         'value', 
         response => {
-            createTable (
-                db,
-                tb
-            );
-            addUHead (
-                response.val()
-            );
-            addUBody(
-                response.val(),
-                db,
-                tb
-            );
-            $(
-                '#utable'
-            ).DataTable();
+            try {
+                createTable (
+                    db,
+                    tb
+                );
+                addUHead (
+                    response.val()
+                );
+                addUBody(
+                    response.val(),
+                    db,
+                    tb
+                );
+                $(
+                    '#utable'
+                ).DataTable();
+            } catch (
+                e
+            ) {
+                alert (
+                    "No hay datos aún"
+                );
+            }
         }
     )
 }
@@ -110,7 +118,7 @@ var createTable = (db,tb) => {
         () => {
             getTableParam().then (
                 users => {
-                    addNew(null,db,tb,users[tb].columns);
+                    addNew(null,db,tb,users[tb]);
                 }
             ) 
             .catch (
@@ -166,7 +174,7 @@ var addUBody = (data,db,tb) => {
             () => {
                 getTableParam().then (
                     users => {
-                        addNew(tr.childNodes,db,tb,users[tb].columns);
+                        addNew(tr.childNodes,db,tb,users[tb]);
                     }
                 ) 
                 .catch (
@@ -193,9 +201,9 @@ var addUBody = (data,db,tb) => {
     }
 }
 
-var addNew = (tr,db,tb,columns) => {
+var addNew = (tr,db,tb,data) => {
     let val = tr;
-    let sortedkeys = Object.keys(columns);
+    let sortedkeys = Object.keys(data.columns);
     sortedkeys.sort();
     if (
         document.getElementById (
@@ -247,7 +255,7 @@ var addNew = (tr,db,tb,columns) => {
             ){
                 newval.value = val[j].textContent;
             }
-            newval.placeholder = columns[sortedkeys[j]];
+            newval.placeholder = data.columns[sortedkeys[j]];
             newval.className = "form-control rounded-0";
             td.appendChild (
                 newval
@@ -267,7 +275,7 @@ var addNew = (tr,db,tb,columns) => {
     snew.addEventListener (
         "click",
         () => {
-            sendData(db,tb,columns);
+            sendData(db,tb,data);
         }
     );
     document.getElementById("panel").appendChild (
@@ -286,7 +294,7 @@ var addNew = (tr,db,tb,columns) => {
         sedit.addEventListener (
             "click",
             () => {
-                delData(db,tb);
+                delData(db,tb,data);
             }
         );
         document.getElementById("panel").appendChild (
@@ -295,18 +303,22 @@ var addNew = (tr,db,tb,columns) => {
     }
 }
 
-var sendData = (db,tb,columns) => {
+var sendData = (db,tb,data) => {
     let data4send = {};
-    for (var j = 0; j < Object.keys(columns).length; j++) {
-        data4send[Object.keys(columns)[j]] = document.getElementById(Object.keys(columns)[j]).value;
+    for (var j = 0; j < Object.keys(data.columns).length; j++) {
+        data4send[Object.keys (
+            data.columns
+        )[j]] = document.getElementById (
+            Object.keys (
+                data.columns
+            )[j]).value;
     }
-    runFire();
     firebase.database().ref (
         db
     ).child (
         tb
     ).child (
-        document.getElementById("Doc").value
+        document.getElementById(data.pk).value
     ).set (
         data4send
     ).then ( 
@@ -351,14 +363,13 @@ var sendData = (db,tb,columns) => {
     );
 }
 
-var delData = (db,tb) => {
-    runFire();
+var delData = (db,tb,data) => {
     firebase.database().ref (
         db
     ).child (
         tb
     ).child (
-        document.getElementById("Doc").value
+        document.getElementById(data.pk).value
     ).set (
         null
     ).then( 

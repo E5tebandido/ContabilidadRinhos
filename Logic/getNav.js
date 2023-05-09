@@ -18,7 +18,19 @@ var createNav = () => {
         let user = document.createElement (
             "a"
         );
-        let pay = document.createElement (
+        let assistance = document.createElement (
+            "a"
+        );
+        let classes = document.createElement (
+            "a"
+        );
+        let plafield = document.createElement (
+            "a"
+        );
+        let monthly = document.createElement (
+            "a"
+        );
+        let lfp = document.createElement (
             "a"
         );
         nav.appendChild ( 
@@ -31,7 +43,19 @@ var createNav = () => {
             user
         );
         navigation.appendChild ( 
-            pay
+            assistance
+        );
+        navigation.appendChild ( 
+            classes
+        );
+        navigation.appendChild ( 
+            plafield
+        );
+        navigation.appendChild ( 
+            monthly
+        );
+        navigation.appendChild ( 
+            lfp
         );
         menu.appendChild ( 
             navigation
@@ -46,10 +70,26 @@ var createNav = () => {
         user.href = "javascript:void(0)";
         user.textContent = "Deportistas";
         user.setAttribute("onClick","userPanel()");
-        pay.className = "nav-item nav-link";
-        pay.href = "javascript:void(0)";
-        pay.textContent = "Pagos";
-        pay.setAttribute("onClick","paymentPanel()");
+        assistance.className = "nav-item nav-link";
+        assistance.href = "javascript:void(0)";
+        assistance.textContent = "Asistencia";
+        assistance.setAttribute("onClick","assistancePanel()");
+        classes.className = "nav-item nav-link";
+        classes.href = "javascript:void(0)";
+        classes.textContent = "Clases";
+        classes.setAttribute("onClick","classesPanel()");
+        plafield.className = "nav-item nav-link";
+        plafield.href = "javascript:void(0)";
+        plafield.textContent = "Cancha";
+        plafield.setAttribute("onClick","plafieldPanel()");
+        monthly.className = "nav-item nav-link";
+        monthly.href = "javascript:void(0)";
+        monthly.textContent = "Mensualidad";
+        monthly.setAttribute("onClick","monthlyPanel()");
+        lfp.className = "nav-item nav-link";
+        lfp.href = "javascript:void(0)";
+        lfp.textContent = "Liga-Federacion-Poliza";
+        lfp.setAttribute("onClick","lfpPanel()");
         navigation.className = "navbar-nav";
         menu.className = "collapse navbar-collapse";
         menu.id = "gmenu";
