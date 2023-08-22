@@ -4,7 +4,7 @@ var udata = (db,tb) => {
         db
     ).child (
         tb
-    ).once (
+    ).once ( 
         'value', 
         response => {
             try {
@@ -69,6 +69,15 @@ var createTable = (db,tb) => {
     ) {
         document.getElementById (
             "savedata"
+        ).remove();
+    }
+    if (
+        document.getElementById (
+            "cancelop"
+        )
+    ) {
+        document.getElementById (
+            "cancelop"
         ).remove();
     }
     let responsivecon = document.createElement (
@@ -151,6 +160,7 @@ var addUHead = (data) => {
             let td = document.createElement (
                 'th'
             );
+            td.setAttribute("data-field",Object.keys(data[Object.keys(data)[i]])[j]);
             td.appendChild (
                 document.createTextNode (
                     Object.keys(data[Object.keys(data)[i]])[j]
@@ -232,6 +242,15 @@ var addNew = (tr,db,tb,data) => {
             "savedata"
         ).remove();
     }
+    if (
+        document.getElementById (
+            "cancelop"
+        )
+    ) {
+        document.getElementById (
+            "cancelop"
+        ).remove();
+    }
     for (var i = 0; i < 1; i++) {
         let tr = document.createElement (
             'tr'
@@ -284,23 +303,74 @@ var addNew = (tr,db,tb,data) => {
     if (
         val
     ) {
-        let sedit = document.createElement (
+        let sedel = document.createElement (
             "a"
         ); 
-        sedit.className = "btn float-right btn-danger m-3";
-        sedit.id = "deldata";
-        sedit.href = "javascript:void(0)";
-        sedit.textContent = "Eliminar";
-        sedit.addEventListener (
+        sedel.className = "btn float-right btn-danger m-3";
+        sedel.id = "deldata";
+        sedel.href = "javascript:void(0)";
+        sedel.textContent = "Eliminar";
+        sedel.addEventListener (
             "click",
             () => {
                 delData(db,tb,data);
             }
         );
         document.getElementById("panel").appendChild (
-            sedit
+            sedel
         );
     }
+    let cnew = document.createElement (
+        "a"
+    ); 
+    cnew.className = "btn float-right btn-secondary m-3";
+    cnew.id = "cancelop";
+    cnew.href = "javascript:void(0)";
+    cnew.textContent = "Cancelar";
+    cnew.addEventListener (
+        "click",
+        () => {
+            if (
+                document.getElementById (
+                    "deldata"
+                )
+            ) {
+                document.getElementById (
+                    "deldata"
+                ).remove();
+            }
+            if (
+                document.getElementById (
+                    "addline"
+                )
+            ) {
+                document.getElementById (
+                    "addline"
+                ).remove();
+            }
+            if (
+                document.getElementById (
+                    "savedata"
+                )
+            ) {
+                document.getElementById (
+                    "savedata"
+                ).remove();
+            }
+            if (
+                document.getElementById (
+                    "cancelop"
+                )
+            ) {
+                document.getElementById (
+                    "cancelop"
+                ).remove();
+            }
+        }
+    );
+    document.getElementById("panel").appendChild (
+        cnew
+    );
 }
 
 var sendData = (db,tb,data) => {
@@ -353,6 +423,16 @@ var sendData = (db,tb,data) => {
                     "addline"
                 ).remove();
             }
+            if (
+                document.getElementById (
+                    "cancelop"
+                )
+            ) {
+                document.getElementById (
+                    "cancelop"
+                ).remove();
+            }
+            udata(db,tb);
         }
     ).catch ( 
         (Error) => {
@@ -404,6 +484,16 @@ var delData = (db,tb,data) => {
                     "addline"
                 ).remove();
             }
+            if (
+                document.getElementById (
+                    "cancelop"
+                )
+            ) {
+                document.getElementById (
+                    "cancelop"
+                ).remove();
+            }
+            udata(db,tb);
         }
     )
 }
@@ -417,3 +507,4 @@ var getTableParam = () => {
         data => (data) 
     ) 
 }
+
